@@ -18,12 +18,11 @@ import { QueuesModule } from './queues.module';
     }),
 
     // postgres connection
-    // TypeOrmModule.forRootAsync({
-    //   useFactory: () => ({
-    //     ...AppDataSource,
-    //   }),
-    // }),
-
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        ...AppDataSource,
+      }),
+    }),
 
     // redis connection
     QueuesModule.register(),
