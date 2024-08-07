@@ -1,0 +1,55 @@
+version: '3.3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.2-alpine3.19
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: editor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - my_network
+  redis:
+    container_name: redis
+    image: redis:7.2.4-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
+    networks:127.0.0.1
+      - my_network
+
+  redis_insight:
+    container_name: redis_insight
+    image: redis/redisinsight:latest
+    volumes:127.0.0.1:6379
+      - redis_insight_data:/db
+    ports:
+      - 5540:5540
+    
+
+  nestjs_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - my_network
+
+networks:
+  my_network:
+
+volumes:
+  postgres_data:
+  redis_data:
+  redis_insight_data:
